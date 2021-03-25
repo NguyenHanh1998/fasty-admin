@@ -1,0 +1,7 @@
+export const authMutations = {
+  SET_AUTH: 'SET_AUTH',
+  SET_USER: 'SET_USER',
+  PURGE_AUTH: 'PURGE_AUTH',
+  SET_ERROR: 'SET_ERROR',
+  SET_SUCCESS: 'SET_SUCCESS',
+}
