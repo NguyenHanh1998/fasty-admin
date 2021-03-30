@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="58px" height="58px" viewBox="0 0 58 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="49.997696%" x2="100%" y2="49.997696%" id="linearGradient-1">
+            <stop stop-color="#FBC827" offset="0%"></stop>
+            <stop stop-color="#FBCA2E" offset="7%"></stop>
+            <stop stop-color="#FBCF41" offset="16%"></stop>
+            <stop stop-color="#FBD75F" offset="27%"></stop>
+            <stop stop-color="#FBE28A" offset="40%"></stop>
+            <stop stop-color="#FBF0BE" offset="53%"></stop>
+            <stop stop-color="#FBE89E" offset="59%"></stop>
+            <stop stop-color="#FBDC74" offset="68%"></stop>
+            <stop stop-color="#FBD352" offset="77%"></stop>
+            <stop stop-color="#FBCD3A" offset="85%"></stop>
+            <stop stop-color="#FBC92C" offset="93%"></stop>
+            <stop stop-color="#FBC827" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="50.0011537%" x2="100%" y2="50.0011537%" id="linearGradient-2">
+            <stop stop-color="#FBC827" offset="0%"></stop>
+            <stop stop-color="#FBCA2E" offset="7%"></stop>
+            <stop stop-color="#FBCF41" offset="16%"></stop>
+            <stop stop-color="#FBD75F" offset="27%"></stop>
+            <stop stop-color="#FBE28A" offset="40%"></stop>
+            <stop stop-color="#FBF0BE" offset="53%"></stop>
+            <stop stop-color="#FBE89E" offset="59%"></stop>
+            <stop stop-color="#FBDC74" offset="68%"></stop>
+            <stop stop-color="#FBD352" offset="77%"></stop>
+            <stop stop-color="#FBCD3A" offset="85%"></stop>
+            <stop stop-color="#FBC92C" offset="93%"></stop>
+            <stop stop-color="#FBC827" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Transaction-Management" transform="translate(-755.000000, -169.000000)" fill-rule="nonzero">
+            <g id="Group-16" transform="translate(755.000000, 169.000000)">
+                <g id="Group">
+                    <circle id="Oval" fill="#231916" cx="29" cy="29" r="29"></circle>
+                    <polygon id="Path" fill="url(#linearGradient-1)" points="42.9251297 38.9097277 31.5614683 14.0227639 31.5724336 14 31.5517214 14 27.4482786 14 27.4275664 14 27.4373133 14.0227639 16.0736519 38.9097277 14 38.9097277 14 40 21.8888933 40 21.8888933 38.9097277 20.1978069 38.9097277 29.5 18.5384084 38.8009747 38.9097277 37.1098884 38.9097277 37.1098884 40 45 40 45 38.9097277"></polygon>
+                    <polygon id="Path" fill="#FFFFFF" points="16.0736519 19.0902221 27.4373133 43.9760391 27.4275664 44 27.4482786 44 31.5517214 44 31.5724336 44 31.5614683 43.9772371 42.9251297 19.0902221 45 19.0902221 45 18 37.1098884 18 37.1098884 19.0902221 38.8009747 19.0902221 29.5 39.4606027 20.1978069 19.0902221 21.8888933 19.0902221 21.8888933 18 14 18 14 19.0902221"></polygon>
+                    <path d="M29,49.8140388 C17.8588578,49.8150263 8.67800486,41.102093 8.13550239,30.0129401 C7.59299993,18.9237872 15.8798308,9.36224624 26.9682366,8.28328722 C38.0566423,7.20432819 48.0430544,14.9877884 49.6634557,25.9720562 L55,25.9720562 C53.4936785,13.0407504 42.4774232,3 29.090307,3 C14.6809151,3 3,14.6474144 3,29.0005999 C3,43.3537854 14.679711,55 29.090307,55 C42.2715232,55 53.1637568,45.2580243 54.9253462,32.6062949 L49.5671282,32.6062949 C47.8524985,42.3818677 39.2998194,49.8140388 29,49.8140388 Z" id="Path" fill="url(#linearGradient-2)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

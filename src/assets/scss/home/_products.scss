@@ -1,0 +1,21 @@
+.products {
+  &__search {
+    min-width: 200px;
+    position: relative;
+    @media screen and (min-width: 1068px) {
+      min-width: 300px;
+    }
+  }
+
+  &__filter-item-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  &__search-icon {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    opacity: 0.8;
+  }
+}

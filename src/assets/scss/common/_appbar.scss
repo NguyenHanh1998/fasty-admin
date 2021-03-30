@@ -1,0 +1,84 @@
+.ft {
+  &__appbar {
+    .v-toolbar {
+      &__content {
+        margin: 0px;
+        background-color: #441012;
+        border-left: 1px solid rgba(151, 151, 151, .2);
+        .fa-menu-bar {
+          color: #dba634 !important;
+          font-size: 15px !important;
+        }
+      }
+    }
+    &__menu {
+      width: 34px !important;
+      height: 34px !important;
+    }
+    &__menu-item {
+      color: #333333 !important;
+      font-size: 15px;
+      font-weight: 500;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    &__menu-icon {
+      margin-right: 10px;
+    }
+    &__menu-dropdown {
+      width: 250px;
+      border: 1px solid rgba(134, 163, 211, 0.16);
+      padding: 0;
+      margin: 0;
+      border-radius: 3px;
+      .dropdown-item {
+        text-align: right;
+        padding: 13px 20px;
+        border-bottom: 1px solid rgba(134, 163, 211, 0.16);
+        background-color: #fff !important;
+        font-size: 15px;
+        &:last-child {
+          border-bottom: none;
+          border-bottom-left-radius: 2px;
+          border-bottom-right-radius: 2px;
+        }
+        &:first-child {
+          border-top-left-radius: 2px;
+          border-top-right-radius: 2px;
+        }
+        &:hover{
+          color: #ffffff !important;
+          background-color: #601418 !important;
+        }
+      }
+      &::before {
+        content: "";
+        position: absolute;
+        right: 26px;
+        top: -11px;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid rgba(134, 163, 211, 0.16);
+        @media screen and (max-width: 767px) {
+          content: none;
+        }
+      }
+    }
+  }
+  &__appbar-profile {
+    color: rgba(255, 255, 255, .6);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 25px;
+  }
+  &__appbar-logo {
+    width: 34px;
+    height: 34px;
+  }
+  &__appbar-logo-modal {
+    width: 92px;
+    height: 92px;
+  }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="37px" height="58px" viewBox="0 0 37 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>ethereum (2)</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Transaction-Management" transform="translate(-365.000000, -169.000000)" fill-rule="nonzero">
+            <g id="ethereum-(2)" transform="translate(365.000000, 169.000000)">
+                <polygon id="Path" fill="#708299" points="18.5333589 43.9892038 2 36 18.51836 58 21 54.6945569 21 42.7935222"></polygon>
+                <polygon id="Path" fill="#708299" points="18.4997785 0 0 33 37 33"></polygon>
+                <polygon id="Path" fill="#68788E" points="37 33 18 0 18 33"></polygon>
+                <polygon id="Path" fill="#3C3C47" points="18.5706599 24.0342774 18.4976906 24 0 33 0.0164625335 33 18.5141532 42 18.5871224 41.9657227 21 40.7994141 21 25.209375"></polygon>
+                <polygon id="Path" fill="#68788E" points="19.0145178 43.9986515 19 58 35 36"></polygon>
+                <polygon id="Path" fill="#31313B" points="36.9832084 33 18.0744281 24.0342774 18 24 18.0167918 42 18.0912197 41.9657227 37 33"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>
