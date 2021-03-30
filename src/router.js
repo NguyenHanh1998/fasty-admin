@@ -9,54 +9,39 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'ViewIndex',
       component: () => import('@/views/dashboard/Index'),
+      redirect: '/products',
       children: [
-        // Dashboard
+        // Products Listing
         {
-          name: 'Dashboard',
-          path: '',
-          component: () => import('@/views/dashboard/Dashboard'),
+          name: 'Products Listing',
+          path: '/products',
+          component: () => import('@/views/products/ProductsListing'),
         },
         // Pages
         {
-          name: 'User Profile',
-          path: 'pages/user',
-          component: () => import('@/views/dashboard/pages/UserProfile'),
+          name: 'Transactions Management',
+          path: '/transactions',
+          component: () => import('@/views/transactions/TransactionManagement'),
         },
         {
-          name: 'Notifications',
-          path: 'components/notifications',
-          component: () => import('@/views/dashboard/component/Notifications'),
-        },
-        {
-          name: 'Icons',
-          path: 'components/icons',
-          component: () => import('@/views/dashboard/component/Icons'),
-        },
-        {
-          name: 'Typography',
-          path: 'components/typography',
-          component: () => import('@/views/dashboard/component/Typography'),
-        },
-        // Tables
-        {
-          name: 'Regular Tables',
-          path: 'tables/regular-tables',
-          component: () => import('@/views/dashboard/tables/RegularTables'),
-        },
-        // Maps
-        {
-          name: 'Google Maps',
-          path: 'maps/google-maps',
-          component: () => import('@/views/dashboard/maps/GoogleMaps'),
-        },
-        // Upgrade
-        {
-          name: 'Upgrade',
-          path: 'upgrade',
-          component: () => import('@/views/dashboard/Upgrade'),
+          name: 'Fee Settings',
+          path: '/fees',
+          component: () => import('@/views/fees/FeesSetting'),
         },
       ],
+      meta: {
+        auth: true,
+      },
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: () => import('@/views/auth/Login'),
+      meta: {
+        guest: true,
+      },
     },
   ],
 })
