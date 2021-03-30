@@ -6,7 +6,7 @@
     :expand-on-hover="expandOnHover"
     :right="$vuetify.rtl"
     :src="barImage"
-    mobile-break-point="960"
+    mobile-breakpoint="960"
     app
     width="260"
     v-bind="$attrs"
@@ -108,38 +108,18 @@
       items: [
         {
           icon: 'mdi-view-dashboard',
-          title: 'dashboard',
-          to: '/',
+          title: 'Products Listing',
+          to: '/products',
         },
         {
           icon: 'mdi-account',
-          title: 'user',
-          to: '/pages/user',
+          title: 'Transactions Management',
+          to: '/transactions',
         },
         {
-          title: 'rtables',
+          title: 'Fee Setting',
           icon: 'mdi-clipboard-outline',
-          to: '/tables/regular-tables',
-        },
-        {
-          title: 'typography',
-          icon: 'mdi-format-font',
-          to: '/components/typography',
-        },
-        {
-          title: 'icons',
-          icon: 'mdi-chart-bubble',
-          to: '/components/icons',
-        },
-        {
-          title: 'google',
-          icon: 'mdi-map-marker',
-          to: '/maps/google-maps',
-        },
-        {
-          title: 'notifications',
-          icon: 'mdi-bell',
-          to: '/components/notifications',
+          to: '/fees',
         },
       ],
     }),

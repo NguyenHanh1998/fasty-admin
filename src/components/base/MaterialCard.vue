@@ -14,7 +14,7 @@
         <v-img :src="avatar" />
       </v-avatar>
 
-      <v-sheet
+      <!-- <v-sheet
         v-else
         :class="{
           'pa-7': !$slots.image
@@ -53,7 +53,7 @@
           class="text-h5 font-weight-thin"
           v-text="text"
         />
-      </v-sheet>
+      </v-sheet> -->
 
       <div
         v-if="$slots['after-heading']"

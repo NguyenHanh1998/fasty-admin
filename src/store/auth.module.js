@@ -1,5 +1,6 @@
 import * as JwtService from '@/services/jwt-service'
-import * as ApiService from '@/services/api-service'
+import ApiService from '@/services/api-service'
+import router from '@/router'
 import * as UserService from '@/services/user-service'
 import { authGetters } from './getters.type'
 import { authActions } from './actions.type'
@@ -30,7 +31,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       ApiService.post('/login', payload)
       .then(({ data }) => {
-        const user = { email: data.data && data.data.email ? data.data.email : null }
+        const user = { email: data.data && data.data.user ? data.data.user : null }
         const token = data.data && data.data.token ? data.data.token : null
 
         context.commit(authMutations.SET_USER, { user })
@@ -72,6 +73,20 @@ const mutations = {
       message = error.toString()
     }
     state.errorMsg = isServer ? 's' + message : message
+  },
+
+  [authMutations.PURGE_AUTH] (state) {
+    state.user = {}
+    state.isAuthenticated = false
+    state.successMsg = null
+    state.errorMsg = null
+
+    const forcePushLogin = !!JwtService.getToken()
+    JwtService.destroyToken()
+    // force push to login page here
+    if (forcePushLogin) {
+      router.push('/login')
+    }
   },
 }
 

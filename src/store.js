@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import auth from './store/auth.module'
+import products from './store/products.module'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -17,11 +18,19 @@ export default new Vuex.Store({
     SET_DRAWER (state, payload) {
       state.drawer = payload
     },
+    RESET_MESSAGE (state, _module) {
+      if (!state || !state[_module]) {
+        return
+      }
+      state[_module].errorMsg = null
+      state[_module].successMsg = null
+    },
   },
   actions: {
 
   },
   modules: {
     auth,
+    products,
   },
 })
