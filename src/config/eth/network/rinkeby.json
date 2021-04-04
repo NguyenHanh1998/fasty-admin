@@ -1,0 +1,13 @@
+{
+  "chainId": 4,
+  "chainName": "Rinkeby",
+  "network": "rinkeby",
+  "averageBlockTime": 6000,
+  "requiredConfirmation": 30,
+  "explorerEndpoint": "https://rinkeby.etherscan.io",
+  "provider": "https://rinkeby.infura.io/v3/b578dbea11f7483baec6624311f2e3a0",
+  "contractAddress": "0x6F457D69eF39C9E2286Fa8D18Bb53DFa77b6B6B6",
+  "tokenAddress": {
+    "eth": "0x0000000000000000000000000000000000000000"
+  }
+}

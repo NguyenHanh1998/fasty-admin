@@ -22,6 +22,7 @@ import vuetify from './plugins/vuetify'
 import i18n from './i18n'
 import ApiService from './services/api-service'
 import Vuelidate from 'vuelidate'
+import Web3Service from '@/services/web3-service'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // check env before start app
@@ -36,6 +37,7 @@ Vue.use(Vuelidate)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 
+Web3Service.init()
 ApiService.init()
 
 router.beforeEach((to, _, next) => {
