@@ -41,17 +41,20 @@
               <th class="text-center">
                 No
               </th>
-              <th class="text-center">
+              <th class="text-left">
                 Product Name
               </th>
-              <th class="text-center">
+              <th class="text-left">
                 Slug
               </th>
               <th class="text-center">
-                Description
+                Gender
               </th>
-              <th class="text-center">
-                Image
+              <th class="text-right">
+                Price
+              </th>
+              <th class="text-left">
+                Status
               </th>
               <th class="text-right text-center">
                 Action
@@ -59,72 +62,44 @@
             </tr>
           </thead>
 
-          <tbody>
-            <tr>
-              <td class="tokens__row-index-text">
-                1
+          <tbody v-if="!isFetching">
+            <tr
+              v-for="(product, index) in allProducts"
+              :key="product.id + '_' + index"
+            >
+              <td>
+                <div class="products__row-index-box">
+                  <div class="products__row-index-text">
+                    {{ product.index }}
+                  </div>
+                </div>
               </td>
-              <td class="text-right">
-                Dakota Rice
+              <td class="text-left">
+                {{ product.name }}
               </td>
-              <td class="text-right">
-                Niger
+              <td class="text-left">
+                {{ product.slug }}
               </td>
-              <td class="text-right">
-                Oud-Turnhout
+              <td class="text-center">
+                {{ product.gender }}
               </td>
-              <td class="text-right">
-                $36,738
+              <td class="text-right products__offer-price-box">
+                {{ product.price }}
               </td>
-            </tr>
-
-            <tr>
-              <td>2</td>
-              <td>Minverva Hooper</td>
-              <td>Curaçao</td>
-              <td>Sinaas-Waas</td>
-              <td class="text-right">
-                $23,789
+              <td class="text-left">
+                {{ product.status }}
               </td>
-            </tr>
-
-            <tr>
-              <td>3</td>
-              <td>Sage Rodriguez</td>
-              <td>Netherlands</td>
-              <td>Baileux</td>
-              <td class="text-right">
-                $56,142
-              </td>
-            </tr>
-
-            <tr>
-              <td>4</td>
-              <td>Philip Chaney</td>
-              <td>Korea, South</td>
-              <td>Overland Park</td>
-              <td class="text-right">
-                $38,735
-              </td>
-            </tr>
-
-            <tr>
-              <td>5</td>
-              <td>Doris Greene</td>
-              <td>Malawi</td>
-              <td>Feldkirchen in Kärnten</td>
-              <td class="text-right">
-                $63,542
-              </td>
-            </tr>
-
-            <tr>
-              <td>6</td>
-              <td>Mason Porter</td>
-              <td>Chile</td>
-              <td>Gloucester</td>
-              <td class="text-right">
-                $78,615
+              <td>
+                <v-row
+                  justify="center"
+                >
+                  <button
+                    class="cards__link cards__link-bold"
+                    @click="seeProductDetail(product.id)"
+                  >
+                    Edit
+                  </button>
+                </v-row>
               </td>
             </tr>
           </tbody>
@@ -137,7 +112,8 @@
 </template>
 <script>
   import { productsActions } from '@/store/actions.type'
-
+  import { mapGetters, mapState } from 'vuex'
+  import { productsGetters } from '@/store/getters.type'
   export default {
     name: 'ProductsListing',
 
@@ -161,6 +137,16 @@
       }
     },
 
+    computed: {
+      ...mapState({
+        errorMsg: (state) => state.products.errorMsg,
+      }),
+      ...mapGetters({
+        totalProducts: productsGetters.GET_TOTAL_PRODUCTS,
+        allProducts: productsGetters.GET_ALL_PRODUCTS,
+      }),
+    },
+
     mounted () {
       this.fetchData({
         isMounted: true,
@@ -180,11 +166,21 @@
           if (!options || !options.isMounted) {
             this.isMounted = false
           }
+          // handle error
         })
         this.isFetching = false
         if (!options || !options.isMounted) {
           this.isMounted = false
         }
+      },
+      // handleErrorNotification() {
+
+      // }
+      seeProductDetail (productId) {
+        if (!productId) {
+          return
+        }
+        this.$router.push(`/products/${productId}`).catch(error => error ? console.error(error) : '')
       },
     },
   }
