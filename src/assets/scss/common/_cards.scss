@@ -16,6 +16,7 @@
   &__header {
     color: #333333;
     font-size: 25px;
+    margin-left: 30px;
     font-weight: 700;
     margin-bottom: 20px;
   }
@@ -23,6 +24,8 @@
     color: #333333;
     font-size: 15px;
     font-weight: 600;
+    display: inline-block;
+    margin-bottom: .5rem;
   }
   &__input {
     // color: #999999;
@@ -36,12 +39,17 @@
     // &:disabled {
     //   background-color: #eee;
     // }
-    &__unit-price {
-      max-width: 235px !important;
-    }
     &:disabled {
       color: #999999 !important;
     }
+  }
+  &__textarea {
+    color: #333333;
+    width: 100%;
+    border: 1px solid #d0d0d0;
+    border-radius: 3px;
+    padding: 9px 20px 8px 20px;
+    background-color: #f4f4f4;
   }
   &__input-large {
     padding-top: 12px;
