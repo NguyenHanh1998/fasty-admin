@@ -19,6 +19,11 @@ export default new Router({
           path: '/products',
           component: () => import('@/views/products/ProductsListing'),
         },
+        {
+          name: 'Product Details',
+          path: '/products/:id',
+          component: () => import('@/views/products/ProductDetails'),
+        },
         // Pages
         {
           name: 'Transactions Management',
