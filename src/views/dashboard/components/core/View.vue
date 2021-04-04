@@ -1,5 +1,5 @@
 <template>
-  <v-main>
+  <v-main class="ft__view">
     <router-view />
 
     <dashboard-core-footer />

@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 import { productsActions } from './actions.type'
 import { productsMutations, authMutations } from './mutations.type'
+import { productsGetters } from './getters.type'
 import * as JwtService from '@/services/jwt-service'
 const { default: ApiService } = require('../services/api-service')
 
@@ -8,8 +9,21 @@ const state = {
   totalProducts: 0,
   allProducts: [],
   successMsg: null,
+  selectedProduct: {},
   errorMsg: null,
   currentPage: 1,
+}
+
+const getters = {
+  [productsGetters.GET_TOTAL_PRODUCTS] (state) {
+    return state.totalProducts
+  },
+  [productsGetters.GET_ALL_PRODUCTS] (state) {
+    return state.allProducts
+  },
+  [productsGetters.GET_SELECTED_PRODUCT] (state) {
+    return state.selectedProduct
+  },
 }
 
 const actions = {
@@ -22,9 +36,9 @@ const actions = {
 
     return new Promise((resolve, reject) => {
       ApiService.query('/products', { params }).then((data) => {
-        context.commit(productsMutations.SET_TOTAL_PRODUCTS, data.meta)
+        context.commit(productsMutations.SET_TOTAL_PRODUCTS, data.data.meta)
         context.commit(productsMutations.SET_PRODUCTS, {
-          products: data.data,
+          products: data.data.data,
           page: params.page,
           limit: params.limit,
         })
@@ -43,6 +57,31 @@ const actions = {
       })
     })
   }
+  },
+  [productsActions.FETCH_PRODUCT_DETAILS] (context, id) {
+    if (JwtService.getToken()) {
+      ApiService.setHeader()
+
+      return new Promise((resolve, reject) => {
+        ApiService.get(`/products/${id}`)
+          .then(({ data }) => {
+            context.commit(productsMutations.SET_SELECTED_PRODUCT, data.data)
+            resolve(data.data)
+          })
+          .catch(({ response }) => {
+            if (response && response.status === 401) {
+              context.commit(productsMutations.RESET_STATE)
+              context.commit(authMutations.PURGE_AUTH)
+            } else {
+              context.commit(productsMutations.SET_ERROR, {
+                error: response ? response.data : null,
+                isServer: true,
+              })
+            }
+            reject(response)
+          })
+      })
+    }
   },
 }
 
@@ -83,9 +122,13 @@ const mutations = {
     }
     state.errorMsg = isServer ? 's' + message : message
   },
+  [productsMutations.SET_SELECTED_PRODUCT] (state, product) {
+    state.selectedProduct = product
+  },
 }
 export default {
   state,
+  getters,
   actions,
   mutations,
 }
