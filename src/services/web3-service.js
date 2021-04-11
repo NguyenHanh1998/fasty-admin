@@ -39,7 +39,7 @@ const Web3Service = {
     let hasRole = true
     let message = null
 
-    const network = this.getNetwork()
+    const network = await this.getNetwork()
     if (network !== networkConfigs.network) {
       hasRole = false
       message = `Chain require is ${networkConfigs.chainName} network. Check your MetaMask and reload again.`
@@ -58,11 +58,41 @@ const Web3Service = {
     }
   },
 
+  async sendTransaction (methodName, params) {
+    const metaMaskAddress = await this.connectToMetaMask()
+    const contract = this.getContractInstance(this.getWeb3InstanceWithMetaMask())
+
+    return new Promise((resolve, reject) => {
+      contract.methods[methodName](...params)
+        .send({ from: metaMaskAddress })
+        .once('transactionHash', txid => {
+          resolve({ txid })
+        })
+        .on('error', err => {
+          reject(err)
+        })
+    })
+  },
   async readContract (methodName, params) {
     const contract = this.getContractInstance(window.web3)
     const response = await contract.methods[methodName](...params).call()
     return response
   },
+
+  // async getRawTransactionByHash (txid) {
+  //   const result = await axios.post(networkConfigs.provider, {
+  //     jsonrpc: '2.0',
+  //     method: 'eth_getTransactionByHash',
+  //     params: [txid],
+  //     id: 1,
+  //   }, {
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //   console.log('===', result)
+  //   return result
+  // },
 
   getContractInstance (web3Instance) {
     const contractAbi = require('@/abi/FastyToken.json').abi
@@ -70,7 +100,7 @@ const Web3Service = {
     return new web3Instance.eth.Contract(contractAbi, contractAddress)
   },
 
-  async getNetwork () {
+ async getNetwork () {
     const web3 = this.getWeb3InstanceWithMetaMask()
     return web3.eth.net.getNetworkType()
   },

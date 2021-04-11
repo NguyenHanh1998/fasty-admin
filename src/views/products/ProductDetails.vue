@@ -19,7 +19,9 @@
               cols="12"
               lg="6"
             >
-              <div class="form-group">
+              <div
+                class="form-group"
+              >
                 <label
                   class="cards__label"
                   for="selling-status"
@@ -38,7 +40,10 @@
                   attach
                 />
               </div>
-              <div class="form-group">
+              <div
+                v-if="!isOffSale() && !isCancelling()"
+                class="form-group"
+              >
                 <label
                   class="cards__label"
                   for="gender"
@@ -50,14 +55,17 @@
                   v-model="gender"
                   name="gender"
                   class="cards__select"
-                  :items="computedGender()"
-                  :disabled="!canEditable()"
+                  :items="Gender"
+                  :disabled="!isOnSale()"
                   auto
                   attach
                 />
               </div>
 
-              <div class="form-group">
+              <div
+                v-if="!isOffSale() && !isCancelling()"
+                class="form-group"
+              >
                 <label
                   class="cards__label"
                   for="type"
@@ -69,13 +77,17 @@
                   v-model="type"
                   name="type"
                   class="cards__select"
-                  :items="computedProductTypes()"
+                  :items="ProductTypes"
+                  :disabled="!isOnSale()"
                   auto
                   attach
                 />
               </div>
 
-              <div class="form-group">
+              <div
+                v-if="!isOffSale() && !isCancelling()"
+                class="form-group"
+              >
                 <label
                   class="cards__label"
                   for="descripiton"
@@ -88,10 +100,61 @@
                   name="description"
                   type="text"
                   class="cards__textarea"
+                  :disabled="!isOnSale()"
                   placeholder="Description"
                 />
               </div>
+
+              <div
+                v-if="!isOffSale() && !isCancelling()"
+                class="form-group"
+              >
+                <label
+                  class="cards__label"
+                  for="paid-currency"
+                >
+                  Choose default currency you want to get paid.
+                </label>
+                <v-select
+                  id="paid-currency-select"
+                  v-model="paidCurrency.currency"
+                  name="paid-currency-select"
+                  :items="Coins"
+                  class="cards__select"
+                  :disabled="!isOnSale()"
+                  auto
+                  attach
+                />
+              </div>
+
+              <div
+                v-if="!isOffSale() && !isCancelling()"
+                class="form-group"
+              >
+                <div class="product-detail__price-set__offer">
+                  <div class="product-detail__price-set__col-1-left product-detail__price-set__w-160 pa-0">
+                    Offer Price
+                  </div>
+                  <div class="product-detail__price-set__unit-input-box">
+                    <div class="product-detail__price-set__unit-input">
+                      <div class="product-detail__price-set__input-box">
+                        <label>{{ paidCurrency.currency.toUpperCase() }}</label>
+                        <input
+                          :id="'paid-currency-' + paidCurrency.currency + '-inp'"
+                          v-model="paidCurrency.value"
+                          :name="'paid-currency-' + paidCurrency.currency + '-inp'"
+                          type="text"
+                          class="cards__input cards__input-number cards__pl-50 cards__pr-50"
+                          :disabled="!isOnSale()"
+                          @input="onPaidCurrencyInput"
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </v-col>
+
             <v-col
               cols="12"
               lg="6"
@@ -103,7 +166,7 @@
                   class="cards__label"
                   for="refer-currency"
                 >
-                  Offer Prices
+                  Offer Prices in All Currency
                 </label>
                 <div class="product-detail__refer-currency__wrapper">
                   <v-row>
@@ -126,17 +189,17 @@
                       </thead>
                       <tbody>
                         <tr
-                          class="token-detail__price-set__currency"
+                          class="product-detail__price-set__currency"
                         >
                           <td
-                            class="token-detail__refer-currency__tbl-col-left"
+                            class="product-detail__refer-currency__tbl-col-left"
                           >
                             <div class="ml-3">
                               <div>
                                 ETH
                               </div>
                               <div
-                                class="token-detail__refer-currency__only-refer"
+                                class="product-detail__refer-currency__only-refer"
                               >
                                 For refer only
                               </div>
@@ -145,23 +208,23 @@
                           <!-- <td
                             v-if="isReferedCurrency(currency)"
                             :class="{
-                              'token-detail__refer-currency__p-vertical-8': isConfirming(),
-                              'token-detail__refer-currency__p-vertical-15': !isConfirming()
+                              'product-detail__refer-currency__p-vertical-8': isConfirming(),
+                              'product-detail__refer-currency__p-vertical-15': !isConfirming()
                             }"
                           >
-                            <div class="token-detail__refer-currency__amount mr-3">
+                            <div class="product-detail__refer-currency__amount mr-3">
                               <div
                                 :class="{
-                                  'token-detail__refer-currency__updating': isConfirming()
+                                  'product-detail__refer-currency__updating': isConfirming()
                                 }"
                               >
                                 {{ getReferAmountAsText(currency) }} {{ currency.toUpperCase() }}
                               </div>
                               <small
                                 v-if="isConfirming()"
-                                class="token-detail__refer-currency__updating"
+                                class="product-detail__refer-currency__updating"
                               >
-                                {{ $t('token_detail.lbl_updating') }}
+                                {{ $t('product_detail.lbl_updating') }}
                               </small>
                             </div>
                           </td> -->
@@ -218,13 +281,38 @@
 <script>
   import * as _ from 'lodash'
   import store from '@/store'
-  import { Gender, SellingStatuses, SellingConfirmingTypes, NotificationType, ProductTypes } from '../../constants'
+  import _web3 from 'web3'
+  import BigNumber from 'bignumber.js'
+  import {
+    splitZero,
+    // formatNumberAsText,
+    // convertUnitToReal,
+    convertRealAmountToUnit,
+    formatUuid,
+    convertBytesToUint128Number,
+  } from '@/utils/converter'
+  import { v4 as uuidv4 } from 'uuid'
+  import {
+    Gender,
+    SellingStatuses,
+    SellingConfirmingTypes,
+    NotificationType,
+    ProductTypes,
+    Coins,
+    SmartContractMethod,
+    OrderMethod,
+  } from '../../constants'
   import { productsActions, commonActions } from '@/store/actions.type'
   import { productsGetters } from '@/store/getters.type'
-  // import { productsMutations } from '@/store/mutations.type'
+  import { productsMutations } from '@/store/mutations.type'
   import Web3Service from '@/services/web3-service'
-  import { mapActions, mapGetters, mapState } from 'vuex'
+  import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
+  import ErrorHandler from '@/services/error-handler'
+
   const numberRegex = /^[0-9]+$/
+  let notifyTimeout
+  const network = process.env.VUE_APP_NETWORK
+  const networkConfigs = require(`@/config/eth/network/${network}.json`)
   export default {
     name: 'ProductDetails',
 
@@ -236,7 +324,6 @@
       return {
         loaded: false,
         gender: '',
-        Gender,
         type: '',
         sellingStatus: '',
         description: '',
@@ -244,6 +331,25 @@
           submitted: false,
           requesting: false,
         },
+        initialSellingInfo: null,
+        paidCurrency: {
+          currency: Coins[0].value,
+          value: '0.0',
+          initialized: '0.0',
+        },
+        paidConverts: {
+          eth: {
+            id: 'paid-currency-eth-inp',
+            value: '0.0',
+            initialized: '0.0',
+            errorMessage: '',
+            isChecked: false,
+            isDefault: true,
+          },
+        },
+        Gender,
+        ProductTypes,
+        Coins,
       }
     },
 
@@ -255,7 +361,10 @@
       ...mapGetters({
         selectedProduct: productsGetters.GET_SELECTED_PRODUCT,
       }),
-
+      isSellingChanged: function () {
+        const currentSellingInfo = this.getSellingInfo()
+        return !_.isEqual(JSON.stringify(this.initialSellingInfo), JSON.stringify(currentSellingInfo))
+      },
     },
 
     beforeRouteEnter (to, from, next) {
@@ -293,9 +402,16 @@
     },
 
     methods: {
+      ...mapMutations({
+        resetMessage: 'RESET_MESSAGE',
+        setSuccessMessage: productsMutations.SET_SUCCESS,
+        setErrorMessage: productsMutations.SET_ERROR,
+      }),
       ...mapActions({
         setAlert: commonActions.SET_ETHERERUM_CONNECTION_ALERT,
         setNotification: commonActions.SET_NOTIFICATION,
+        setOverlayLoading: commonActions.SET_SHOW_OVERLAY_LOADING,
+        submitOrderStatus: productsActions.SUBMIT_ORDER,
       }),
 
       connect () {
@@ -321,8 +437,19 @@
         this.type = type.value
         this.description = this.selectedProduct.description
         if (!this.selectedBundle) {
-
+          return
         }
+        if (this.isOffSale()) {
+          this.paidConverts[this.paidCurrency.currency] = {
+            id: `paid-currency-${this.paidCurrency.currency}-inp`,
+            value: '0.0',
+            initialized: '0.0',
+            errorMessage: '',
+            isChecked: true,
+            isDefault: true,
+          }
+        }
+        this.initialSellingInfo = this.getSellingInfo()
       },
 
       computedSellingStatuses () {
@@ -357,31 +484,242 @@
         const _sellingStatus = _.find(_statuses, s => s.value === this.sellingStatus)
         return _sellingStatus.textColor
       },
+      isOffSale () {
+        const _statuses = SellingStatuses.concat(SellingConfirmingTypes)
+        return this.sellingStatus === _statuses[1].value
+      },
+      isOnSale () {
+        const _statuses = SellingStatuses.concat(SellingConfirmingTypes)
+        return this.sellingStatus === _statuses[2].value
+      },
+      isCancelling () {
+        const _statuses = SellingStatuses.concat(SellingConfirmingTypes)
+        return this.sellingStatus === _statuses[8].value
+      },
+      getUpdatedPaymentInfo () {
+        const paymentCurrencies = Object.keys(this.paidConverts).filter(
+          currency => this.paidConverts[currency].isChecked)
+        const offeredCurrencies = [null]
+        const offeredAmounts = [null]
 
-      computedGender () {
-        const genders = _.map(Gender, g => {
-          if (g.value === '') {
-            return null
+        const paymentMethods = _.map(paymentCurrencies, p => {
+          const currency = this.getCoinBySymbol(p)
+          const symbol = currency.value
+          const decimals = currency.decimals
+
+          offeredCurrencies[0] = this.getTokenAddress(symbol)
+          const amount = convertRealAmountToUnit(this.paidConverts[symbol].value, decimals)
+          offeredAmounts[0] = _web3.utils.toHex(_web3.utils.toBN(amount))
+
+          return {
+            currency: symbol,
+            amount: amount.toFixed().toString(),
+            isDefault: true,
           }
-          return Object.assign({}, g, { text: g.text })
         })
-        return _.compact(genders)
+        return { paymentMethods, offeredCurrencies, offeredAmounts }
       },
+      getTokenAddress (currency) {
+        return networkConfigs.tokenAddress[currency]
+      },
+      async apply () {
+        this.actions.submitted = true
+        this.actions.requesting = true
 
-      computedProductTypes () {
-        const productTypes = _.map(ProductTypes, p => {
-          if (p.value === '') {
-            return null
+        const authorized = await Web3Service.checkRole()
+        if (!authorized.hasRole) {
+          this.actions.requesting = false
+          this.setNotification({
+            type: NotificationType.ERROR,
+            msg: authorized.message,
+          })
+          return
+        }
+
+        this.setOverlayLoading(true)
+        if (this.isCreateOrder()) {
+          await this.handleCreateOrder()
+        }
+      },
+      async handleCreateOrder () {
+        let isWeb3Error = true
+        try {
+          const orderId = await this.generateOrderId(10)
+          if (!orderId) {
+            throw new Error('Could not create order')
           }
-          return Object.assign({}, p, { text: p.text })
+
+          const { paymentMethods, offeredCurrencies, offeredAmounts } = this.getUpdatedPaymentInfo()
+          const exchangeAddress = networkConfigs.tokenContractAddress
+          let methodName
+          let params
+          const productId = this.selectedProduct.id
+          // check product is issued
+          const isProductExistent = await this.productHasExisted()
+          if (isProductExistent) {
+            // create product order
+            methodName = SmartContractMethod.CREATE_SINGLE_PRODUCT_ORDER
+            params = [
+              orderId,
+              productId,
+              offeredCurrencies,
+              offeredAmounts,
+            ]
+          } else {
+            // issue and create product order
+            const productId = this.selectedProduct.id
+            const productName = _web3.utils.fromAscii(this.selectedProduct.name)
+            methodName = SmartContractMethod.ISSUE_AND_CREATE_SINGLE_PRODUCT_ORDER
+            params = [
+              orderId,
+              productId,
+              productName,
+              offeredCurrencies,
+              offeredAmounts,
+            ]
+          }
+
+          // request to smart contract
+          const { txid } = await Web3Service.sendTransaction(
+            methodName,
+            params,
+          )
+          isWeb3Error = false
+
+          const apiParams = {
+            orderId,
+            exchangeAddress,
+            txid,
+            productId,
+            amount: _.find(paymentMethods, payment => payment.isDefault).amount,
+            currency: _.find(paymentMethods, payment => payment.isDefault).currency,
+            paymentMethods,
+          }
+
+          // request to api service
+          await this.submitOrderStatus({
+            method: OrderMethod.CREATE,
+            params: apiParams,
+          })
+
+          this.setSuccessMessage({
+            message: 'Order creating!',
+            isServer: false,
+          })
+          this.handleSuccessNotification()
+        } catch (error) {
+          if (isWeb3Error) {
+            this.setErrorMessage({ error, isServer: false })
+          }
+          this.handleErrorNotification()
+        }
+      },
+      async productHasExisted () {
+        const isExistent = await Web3Service.readContract(SmartContractMethod.HAS_EXISTENT_TOKEN, [this.selectedProduct.id])
+        if (!isExistent || isExistent.toString() === 'false' || isExistent.toString() === '0') {
+          return false
+        }
+        return true
+      },
+      async generateOrderId (retry) {
+        const orderId = convertBytesToUint128Number(formatUuid(uuidv4()))
+        if (retry === 0) {
+          return null
+        }
+        try {
+          // check order id existed?
+          const isExistent = await this.hasExistedOrder(orderId)
+          if (!isExistent || isExistent.toString() === 'false' || isExistent.toString() === '0') {
+            return orderId
+          }
+          return this.generateOrderId(retry - 1)
+        } catch (err) {
+          return this.generateOrderId(retry - 1)
+        }
+      },
+      async hasExistedOrder (orderId) {
+        const result = await Web3Service.readContract(SmartContractMethod.HAS_EXISTENT_ORDER, [orderId])
+        return result
+      },
+      isCreateOrder () {
+        const statuses = SellingStatuses.concat(SellingConfirmingTypes)
+        return this.isSellingChanged && this.selectedProduct.status === statuses[1].value &&
+          this.sellingStatus === statuses[2].value
+      },
+      onPaidCurrencyInput () {
+        this.actions.submitted = false
+        if (new BigNumber(this.paidCurrency.initialized).gt(0)) {
+          this.paidCurrency.initialized = '0.0'
+        }
+
+        const defaultCoin = this.getCoinBySymbol(this.paidCurrency.currency)
+        this.paidConverts[this.paidCurrency.currency].isChecked = true
+        this.paidConverts[this.paidCurrency.currency].value = splitZero(
+          this.getReferAmount(this.paidCurrency.currency, true).toFixed(defaultCoin.decimals).toString(),
+        )
+      },
+      getReferAmount (currency, ignore) {
+        if (!currency || currency.length === 0 || !this.paidCurrency.value || this.paidCurrency.value.length === 0) {
+          return new BigNumber(0)
+        }
+        if (!ignore && this.paidConverts[currency] && new BigNumber(this.paidConverts[currency].value).gt(0)) {
+          return new BigNumber(this.paidConverts[currency].value)
+        }
+        return new BigNumber(this.paidCurrency.value)
+      },
+      getCoinBySymbol (currency) {
+        if (!currency) {
+          return 0
+        }
+        const coin = _.find(Coins, c => c.value === currency)
+        return coin
+      },
+
+      getSellingInfo () {
+        const sellingInfo = {}
+        sellingInfo.sellingStatus = this.sellingStatus
+        sellingInfo.gender = this.gender
+        sellingInfo.type = this.type
+        sellingInfo.payment = _.cloneDeep(this.paidConverts)
+        Object.keys(sellingInfo.payment).forEach(currency => {
+          delete sellingInfo.payment[currency].initialized
         })
-        return _.compact(productTypes)
+
+        return sellingInfo
       },
-
-      apply () {
-
+      handleSuccessNotification () {
+        this.setNotification({
+          type: NotificationType.SUCCESS,
+          msg: ErrorHandler.getMessage(this.successMsg, null),
+        })
+        this._resetForm(true)
       },
+      handleErrorNotification () {
+        this.setNotification({
+          type: NotificationType.ERROR,
+          msg: ErrorHandler.getMessage(null, this.errorMsg),
+        })
+        this._resetForm()
+      },
+      _resetForm (shouldReload) {
+        if (notifyTimeout) {
+          clearTimeout(notifyTimeout)
+        }
+        if (shouldReload) {
+          notifyTimeout = setTimeout(() => {
+            this.resetMessage('tokens')
+            window.location.reload()
+          }, 2000)
+        } else {
+          this.actions.submitted = false
+          this.actions.requesting = false
+          this.setOverlayLoading(false)
 
+          notifyTimeout = setTimeout(() => {
+            this.resetMessage('tokens')
+          }, 5000)
+        }
+      },
       exit () {
 
       },

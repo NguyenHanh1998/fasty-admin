@@ -3,6 +3,10 @@ export const Gender = [
   { text: 'Female', value: 2 },
 ]
 
+export const Coins = [
+  { text: 'ETH', value: 'eth', decimals: 18, icon: '/images/icons/logo-ether.svg' },
+]
+
 export const ProductTypes = [
   { text: 'Belt', value: 2 },
   { text: 'T-Shirt', value: 1 },
@@ -33,4 +37,19 @@ export const Web3Error = {
   CHAIN_ID_NOT_MATCH: 'CHAIN_ID_NOT_MATCH',
   CONNECTION_TIME_OUT: 'CONNECTION_TIME_OUT',
   BROWSER_NOT_SUPPORT: 'BROWSER_NOT_SUPPORT',
+}
+
+export const SmartContractMethod = {
+  ISSUE_AND_CREATE_SINGLE_PRODUCT_ORDER: 'issueAndCreateSingleProductOrder',
+  CREATE_SINGLE_PRODUCT_ORDER: 'createSingleProductOrder',
+  UPDATE_ORDER: 'updateOrder',
+  CANCEL_ORDER: 'cancelOrder',
+  HAS_EXISTENT_TOKEN: 'hasExistentToken',
+  HAS_EXISTENT_ORDER: 'hasExistentOrder',
+}
+
+export const OrderMethod = {
+  CREATE: 'create',
+  UPDATE: 'update',
+  CANCEL: 'cancel',
 }
