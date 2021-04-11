@@ -6,7 +6,7 @@
   "requiredConfirmation": 30,
   "explorerEndpoint": "https://rinkeby.etherscan.io",
   "provider": "https://rinkeby.infura.io/v3/b578dbea11f7483baec6624311f2e3a0",
-  "contractAddress": "0x6F457D69eF39C9E2286Fa8D18Bb53DFa77b6B6B6",
+  "tokenContractAddress": "0x2468b3858e6D9B44ddA06639B8b1780663D88dc2",
   "tokenAddress": {
     "eth": "0x0000000000000000000000000000000000000000"
   }
