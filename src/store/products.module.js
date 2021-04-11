@@ -83,6 +83,33 @@ const actions = {
       })
     }
   },
+  [productsActions.SUBMIT_ORDER] (context, payload) {
+    if (JwtService.getToken()) {
+      ApiService.setHeader()
+
+      return new Promise((resolve, reject) => {
+        ApiService.post(`/orders/${payload.method}`, payload.params)
+        .then(({ data }) => {
+          resolve(data)
+        })
+        .catch(({ response }) => {
+          if (response && response.status === 401) {
+            context.commit(productsMutations.RESET_STATE)
+            context.commit(authMutations.PURGE_AUTH)
+          } else {
+            context.commit(productsMutations.SET_ERROR, {
+              error: response ? response.data : null,
+              isServer: true,
+            })
+          }
+          reject(response)
+        })
+      })
+    } else {
+      context.commit(productsMutations.RESET_STATE)
+      context.commit(authMutations.PURGE_AUTH)
+    }
+  },
 }
 
 const mutations = {

@@ -16,4 +16,5 @@ export const authActions = {
 export const productsActions = {
   FETCH_PRODUCTS: 'FETCH_PRODUCTS',
   FETCH_PRODUCT_DETAILS: 'FETCH_PRODUCT_DETAILS',
+  SUBMIT_ORDER: 'SUBMIT_ORDER',
 }

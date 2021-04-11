@@ -35,6 +35,9 @@ const actions = {
       console.warn('Nofitifcation format not match')
     }
   },
+  [commonActions.SET_SHOW_OVERLAY_LOADING] (context, payload) {
+    context.commit(commonMutations.SET_SHOW_OVERLAY_LOADING, payload)
+  },
 }
 
 const mutations = {
@@ -46,6 +49,9 @@ const mutations = {
   },
   [commonMutations.SET_NOTIFICATION] (state, data) {
     state.notification = data
+  },
+  [commonMutations.SET_SHOW_OVERLAY_LOADING] (state, data) {
+    state.showOverlayLoading = data
   },
 }
 
