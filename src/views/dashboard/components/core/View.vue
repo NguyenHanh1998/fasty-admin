@@ -1,9 +1,17 @@
 <template>
-  <v-main class="ft__view">
-    <router-view />
+  <v-content class="ft__view">
+    <app-card>
+      <template
+        v-slot:content
+      >
+        <router-view />
 
-    <dashboard-core-footer />
-  </v-main>
+        <!-- common widget -->
+        <app-notification />
+        <overlay-loading-modal />
+      </template>
+    </app-card>
+  </v-content>
 </template>
 
 <script>
@@ -11,7 +19,9 @@
     name: 'DashboardCoreView',
 
     components: {
-      DashboardCoreFooter: () => import('./Footer'),
+      AppCard: () => import('@/views/dashboard/components/AppCard'),
+      AppNotification: () => import('./AppNotification'),
+      OverlayLoadingModal: () => import('@/views/modals/OverlayLoadingModal'),
     },
   }
 </script>
