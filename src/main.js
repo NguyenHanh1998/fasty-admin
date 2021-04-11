@@ -22,6 +22,22 @@ import vuetify from './plugins/vuetify'
 import i18n from './i18n'
 import ApiService from './services/api-service'
 import Vuelidate from 'vuelidate'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {
+  faSpinner,
+  faUserCircle,
+  faSignOutAlt,
+  faSearch,
+  faCalendarAlt,
+  faRedo,
+  faExclamationTriangle,
+  faTimes,
+  faEye,
+  faEyeSlash,
+  faBars,
+  faSortUp,
+  faSortDown,
+} from '@fortawesome/free-solid-svg-icons'
 import Web3Service from '@/services/web3-service'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -33,6 +49,9 @@ if (!process.env.VUE_APP_NETWORK) {
 }
 
 Vue.use(Vuelidate)
+
+library.add(faSpinner, faUserCircle, faSignOutAlt, faSearch, faCalendarAlt, faRedo)
+library.add(faExclamationTriangle, faTimes, faEye, faEyeSlash, faBars, faSortUp, faSortDown)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
