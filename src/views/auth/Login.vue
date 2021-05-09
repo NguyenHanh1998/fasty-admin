@@ -211,6 +211,7 @@
           await this.login({
             email: this.email,
             password: this.password,
+            isAdmin: true,
           })
           this.$router.push('/')
         } catch (err) {

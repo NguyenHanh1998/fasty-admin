@@ -30,127 +30,69 @@
 
     <v-spacer />
 
-    <v-text-field
-      :label="$t('search')"
-      color="secondary"
-      hide-details
-      style="max-width: 165px;"
+    <button
+      type="button"
+      class="ft__appbar-profile"
     >
-      <template
-        v-if="$vuetify.breakpoint.mdAndUp"
-        v-slot:append-outer
+      {{ user.email }}
+    </button>
+
+    <div class="ft__appbar__menu-dropdown-wrap dropdown">
+      <a
+        id="dropdownMenu"
+        href="javascript:void(0)"
+        role="button"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
       >
-        <v-btn
-          class="mt-n2"
-          elevation="1"
-          fab
-          small
+        <img
+          src="/images/icons/logo.png"
+          alt="Genesis Kingdom"
+          class="ft__appbar-logo ml-4 mr-5"
         >
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </template>
-    </v-text-field>
+      </a>
 
-    <div class="mx-3" />
-
-    <v-btn
-      class="ml-2"
-      min-width="0"
-      text
-      to="/"
-    >
-      <v-icon>mdi-view-dashboard</v-icon>
-    </v-btn>
-
-    <v-menu
-      bottom
-      left
-      offset-y
-      origin="top right"
-      transition="scale-transition"
-    >
-      <template v-slot:activator="{ attrs, on }">
-        <v-btn
-          class="ml-2"
-          min-width="0"
-          text
-          v-bind="attrs"
-          v-on="on"
+      <!-- <div
+        class="ft__appbar__menu-dropdown dropdown-menu dropdown-menu-right mt-6"
+        aria-labelledby="dropdownMenu"
+      > -->
+      <!-- <a
+          class="ft__appbar__menu-item dropdown-item d-flex"
+          href="javascript:void(0)"
+          @click="setShowChangePasswordModal(true)"
         >
-          <v-badge
-            color="red"
-            overlap
-            bordered
-          >
-            <template v-slot:badge>
-              <span>5</span>
-            </template>
-
-            <v-icon>mdi-bell</v-icon>
-          </v-badge>
-        </v-btn>
-      </template>
-
-      <v-list
-        :tile="false"
-        nav
-      >
-        <div>
-          <app-bar-item
-            v-for="(n, i) in notifications"
-            :key="`item-${i}`"
-          >
-            <v-list-item-title v-text="n" />
-          </app-bar-item>
-        </div>
-      </v-list>
-    </v-menu>
-
-    <v-btn
-      class="ml-2"
-      min-width="0"
-      text
-      to="/pages/user"
-    >
-      <v-icon>mdi-account</v-icon>
-    </v-btn>
+          <font-awesome-icon
+            class="ft__appbar__menu-icon"
+            icon="user-circle"
+          />
+          Change Password
+        </a> -->
+      <!-- <a
+          class="ft__appbar__menu-item dropdown-item d-flex"
+          href="/logout"
+        >
+          <font-awesome-icon
+            class="ft__appbar__menu-icon"
+            icon="sign-out-alt"
+          />
+          Logout
+        </a> -->
+      <!-- </div> -->
+    </div>
   </v-app-bar>
 </template>
 
 <script>
-  // Components
-  import { VHover, VListItem } from 'vuetify/lib'
-
   // Utilities
   import { mapState, mapMutations } from 'vuex'
+
+  import { getUser } from '@/services/user-service'
 
   export default {
     name: 'DashboardCoreAppBar',
 
     components: {
-      AppBarItem: {
-        render (h) {
-          return h(VHover, {
-            scopedSlots: {
-              default: ({ hover }) => {
-                return h(VListItem, {
-                  attrs: this.$attrs,
-                  class: {
-                    'black--text': !hover,
-                    'white--text secondary elevation-12': hover,
-                  },
-                  props: {
-                    activeClass: '',
-                    dark: hover,
-                    link: true,
-                    ...this.$attrs,
-                  },
-                }, this.$slots.default)
-              },
-            },
-          })
-        },
-      },
     },
 
     props: {
@@ -161,17 +103,17 @@
     },
 
     data: () => ({
-      notifications: [
-        'Mike John Responded to your email',
-        'You have 5 new tasks',
-        'You\'re now friends with Andrew',
-        'Another Notification',
-        'Another one',
-      ],
+      user: {
+        email: '',
+      },
     }),
 
     computed: {
       ...mapState(['drawer']),
+    },
+
+    mounted () {
+      this.user = getUser()
     },
 
     methods: {

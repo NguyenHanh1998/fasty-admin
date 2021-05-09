@@ -96,7 +96,7 @@ const Web3Service = {
 
   getContractInstance (web3Instance) {
     const contractAbi = require('@/abi/FastyToken.json').abi
-    const contractAddress = networkConfigs.contractAddress
+    const contractAddress = networkConfigs.tokenContractAddress
     return new web3Instance.eth.Contract(contractAbi, contractAddress)
   },
 

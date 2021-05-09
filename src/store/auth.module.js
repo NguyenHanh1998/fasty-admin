@@ -31,7 +31,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       ApiService.post('/login', payload)
       .then(({ data }) => {
-        const user = { email: data.data && data.data.user ? data.data.user : null }
+        const user = { email: data.data && data.data.user.email ? data.data.user.email : null }
         const token = data.data && data.data.token ? data.data.token : null
 
         context.commit(authMutations.SET_USER, { user })
@@ -45,6 +45,26 @@ const actions = {
         reject(response)
       })
     })
+  },
+
+  [authActions.LOGOUT] (context) {
+    if (JwtService.getToken()) {
+      ApiService.setHeader()
+      return new Promise((resolve) => {
+        ApiService.post('/logout')
+          .then(({ data }) => {
+            context.commit(authMutations.PURGE_AUTH)
+            resolve(data)
+          })
+          .catch(({ _ }) => {
+            // should force logout
+            context.commit(authMutations.PURGE_AUTH)
+            resolve('force')
+          })
+      })
+    } else {
+      context.commit(authMutations.PURGE_AUTH)
+    }
   },
 }
 
