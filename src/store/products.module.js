@@ -110,6 +110,35 @@ const actions = {
       context.commit(authMutations.PURGE_AUTH)
     }
   },
+  [productsActions.CREATE_NEW_PRODUCT] (context, payload) {
+    if (JwtService.getToken()) {
+      ApiService.setHeader()
+
+      return new Promise((resolve, reject) => {
+        ApiService.post('/admin/product', payload)
+        .then(({ data }) => {
+          console.log('.......', data.data)
+          context.commit(productsMutations.SET_SUCCESS, data)
+          resolve(data.data)
+        })
+        .catch(({ response }) => {
+          if (response && response.status === 401) {
+            context.commit(productsMutations.RESET_STATE)
+            context.commit(authMutations.PURGE_AUTH)
+          } else {
+            context.commit(productsMutations.SET_ERROR, {
+              error: response ? response.data : null,
+              isServer: true,
+            })
+            reject(response)
+          }
+        })
+      })
+    } else {
+      context.commit(productsMutations.RESET_STATE)
+      context.commit(authMutations.PURGE_AUTH)
+    }
+  },
 }
 
 const mutations = {
@@ -151,6 +180,9 @@ const mutations = {
   },
   [productsMutations.SET_SELECTED_PRODUCT] (state, product) {
     state.selectedProduct = product
+  },
+  [productsMutations.SET_SUCCESS] (state, { message, isServer }) {
+    state.successMsg = isServer ? 's' + message : message
   },
 }
 export default {
