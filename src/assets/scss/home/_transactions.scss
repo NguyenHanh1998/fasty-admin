@@ -1,0 +1,249 @@
+.txs {
+  &__coin-item {
+    max-height: 100px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 23px 60px;
+    background-color: #9c282b;
+    border-right: 1px solid rgba(255, 255, 255, .2);
+    @media screen and (max-width: 991px) {
+      padding-left: 23px;
+      padding-right: 23px;
+    }
+  }
+  &__coin-logo img {
+    height: 58px;
+  }
+  &__img-eth {
+    width: 35px !important;
+  }
+  &__coin-text-bold {
+    font-size: 12px;
+    font-weight: 500;
+  }
+  &__coin-balance-bold {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  &__coin-title {
+    color: white;
+  }
+  &__coin-balance {
+    color: white;
+  }
+  &__coin-history {
+    &__header {
+      margin-bottom: 10px;
+    }
+    &__row[max-width~="1150px"] {
+      height: 130px;
+      display: block;
+      .txs__coin-history__search-right {
+        margin-top: 16px;
+      }
+    }
+    &__row {
+      height: 60px;
+      display: flex;
+      align-items: center;
+    }
+    &__search {
+      min-width: 200px;
+      position: relative;
+      @media screen and (min-width: 1068px) {
+        min-width: 175px;
+      }
+    }
+    &__search-icon {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      opacity: 0.8;
+    }
+    &__btn-wrapper {
+      max-width: 250px !important;
+    }
+    &__filter {
+      margin-bottom: 5px;
+    }
+    &__filter-item-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    &__filter-item-wrapper.max-280 {
+      max-width: 280px;
+    }
+    &__filter-item-wrapper.max-400 {
+      max-width: 400px;
+    }
+    &__filter-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      color: #333333;
+    }
+    &__tx-type {
+      max-width: 220px !important;
+    }
+    &__search-box {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+  &__no-border {
+    border: none;
+  }
+}
+.tx-fee {
+  &__input-items {
+    max-width: 700px;
+  }
+  &__items-align-bottom {
+    align-items: flex-end;
+  }
+  &__genesis-fee {
+    display: flex;
+    flex-direction: column;
+  }
+  &__genesis-label {
+    color: #707070;
+    font-weight: 500;
+  }
+  &__datetime {
+    display: flex;
+    flex-direction: row;
+  }
+  &__time {
+    color: #6c6c6c;
+    font-size: 13px;
+  }
+  &__mgb-10 {
+    margin-bottom: 10px !important;
+  }
+}
+.tdm {
+  &__wrap-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__container {
+    min-width: 820px;
+    padding: 0px 45px;
+
+    &__header {
+      padding: 0px 10px 0px 45px;
+      border: 1px solid white;
+      border-bottom-color: #d0d0d0;
+    }
+
+    &__right {
+      padding-left: 35px;
+      padding-right: 12px;
+      border: 1px solid white;
+      border-left-color: #d0d0d0;
+    }
+  }
+  &__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 25px;
+  }
+  &__header-logo {
+    height: 27px;
+    width: 117px;
+  }
+  &__header-name {
+    color: #9c282b;
+    font-size: 40px;
+    font-weight: 600;
+    text-align: left;
+  }
+  &__header-right {
+    color: #7a7a7a;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  &__header-right-title {
+    margin-top: 10px;
+  }
+  &__btn-close {
+    right: 0;
+    background-color: #f4f4f4;
+    border-radius: 50%;
+  }
+  &__box-left {
+    margin: 15px 0px;
+  }
+  &__box-right {
+    margin: 15px 0px;
+    .tdm__box-title {
+      color: #333333;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  &__box-title {
+    color: #333333;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  &__box-title a {
+    color: #dba734 !important;
+    font-weight: 400;
+  }
+  &__box-info {
+    color: #666666;
+  }
+  &__address {
+    margin-top: 18px;
+    margin-bottom: 40px;
+
+    &__title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333333;
+      margin: 10px 0px;
+    }
+
+    &__info {
+      height: 40px;
+      color: #666666;
+      font-size: 15px;
+      margin-bottom: 20px;
+      padding-top: 9px;
+      padding-left: 20px;
+      border: 1px solid #d0d0d0;
+      border-radius: 3px;
+      background-color: #f4f4f4;
+    }
+  }
+  &__tbl-col-left, &__tbl-col-right {
+    min-width: 200px;
+    color: #444444 !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+  }
+  &__tbl-col-right {
+    text-align: right;
+  }
+  &__tbl-col-no, &__tbl-col-sub {
+    color: #333333 !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+  }
+  &__tbl-col-title, &__tbl-col-price {
+    color: #333333 !important;
+    font-size: 15px !important;
+  }
+  &__tbl-col-title {
+    font-weight: 600 !important;
+  }
+  &__tbl-col-price {
+    text-align: right;
+    font-weight: 500 !important;
+  }
+}

@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import auth from './store/auth.module'
 import products from './store/products.module'
 import common from './store/common.module'
+import transactions from './store/transactions.module'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -34,5 +35,6 @@ export default new Vuex.Store({
     auth,
     products,
     common,
+    transactions,
   },
 })

@@ -53,3 +53,19 @@ export const OrderMethod = {
   UPDATE: 'update',
   CANCEL: 'cancel',
 }
+
+export const Sort = {
+  Direction: {
+    ASC: 'asc',
+    DESC: 'desc',
+  },
+  // IconColor: {
+  //   ACTIVE: 'gray darken-1',
+  //   INACTIVE: 'grey lighten-2',
+  // },
+  Type: {
+    Transaction: {
+      DATETIME: 'updatedAt',
+    },
+  },
+}
