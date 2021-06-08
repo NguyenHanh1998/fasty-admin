@@ -99,13 +99,15 @@
                 <td class="text-left">
                   {{ product.slug }}
                 </td>
-                <td class="text-center">
-                  {{ product.gender }}
+                <td
+                  :class="getGenderAsColor(product.gender)"
+                >
+                  {{ getGenderAsText(product.gender) }}
                 </td>
                 <td class="text-right products__offer-price-box">
-                  {{ product.price }}
+                  {{ soldPriceFormatter(product) }}
                 </td>
-                <td class="text-left">
+                <td :class="getSellingStatusAsColor(product.status)">
                   {{ getSellingStatusAsText(product.status) }}
                 </td>
                 <td>
@@ -113,10 +115,18 @@
                     justify="center"
                   >
                     <button
+                      v-if="canEditable(product.status)"
                       class="cards__link cards__link-bold"
                       @click="seeProductDetail(product.id)"
                     >
                       Edit
+                    </button>
+                    <button
+                      v-if="!canEditable(product.status)"
+                      class="cards__link cards__link-bold"
+                      @click="seeProductDetail(product.id)"
+                    >
+                      View
                     </button>
                   </v-row>
                 </td>
@@ -124,6 +134,51 @@
             </tbody>
           </v-simple-table>
         </v-card-text>
+
+        <v-row v-if="loaded && !isFetching && allProducts.length !== 0">
+          <v-col
+            cols="12"
+          >
+            <div class="cards__pagination__wrapper">
+              <div class="cards__pagination__limit">
+                Show
+                <v-select
+                  id="pagination-limit"
+                  v-model="limit"
+                  :items="computedLimits()"
+                  class="cards__select-bottom cards__select cards__pagination__select ml-3 mr-3"
+                  auto
+                  attach
+                  @change="limitChange"
+                />
+              </div>
+
+              <div class="cards__pagination__page">
+                <v-row class="pagination">
+                  <paginate
+                    v-model="page"
+                    :page-count="getMaxPage()"
+                    :page-range="3"
+                    :margin-pages="2"
+                    :container-class="'pagination'"
+                    :page-class="'cus-page-item'"
+                    :page-link-class="'cus-page-link-item'"
+                    :prev-class="'cus-prev-item'"
+                    :prev-link-class="'cus-prev-link-item'"
+                    :next-class="'cus-next-item'"
+                    :next-link-class="'cus-next-link-item'"
+                    :break-view-class="'cus-break-view'"
+                    :break-view-link-class="'cus-break-view-link'"
+                    :active-class="'cus-page-active'"
+                    :prev-text="'Prev'"
+                    :next-text="'Next'"
+                    :click-handler="fetchWithTimeout"
+                  />
+                </v-row>
+              </div>
+            </div>
+          </v-col>
+        </v-row>
       </base-material-card>
 
       <div class="py-3" />
@@ -135,12 +190,19 @@
 <script>
   import * as _ from 'lodash'
   import { productsActions, commonActions } from '@/store/actions.type'
-  import { mapActions, mapGetters, mapState } from 'vuex'
+  import { productsMutations } from '@/store/mutations.type'
+  import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
   import { productsGetters } from '@/store/getters.type'
+  import { splitZero, formatNumberAsText, convertUnitToReal } from '@/utils/converter'
   import {
+    Coins,
+    Gender,
     SellingStatuses,
+    LimitItems,
   } from '../../constants'
 
+  // let notifyTimeout
+  let filterDelayTimer
   export default {
     name: 'ProductsListing',
 
@@ -156,7 +218,7 @@
         VUE_APP_API_URL: process.env.VUE_APP_API_URL,
         search: {
           key: '',
-          initialStatus: '',
+          status: '',
         },
         // sortBy: {
         //   key: Sort.Type.Token.LAND_NAME,
@@ -164,7 +226,7 @@
         // },
         page: 1,
         limit: 10,
-        // SellingStatuses,
+        SellingStatuses,
         // Sort,
       }
     },
@@ -176,10 +238,16 @@
       ...mapGetters({
         totalProducts: productsGetters.GET_TOTAL_PRODUCTS,
         allProducts: productsGetters.GET_ALL_PRODUCTS,
+        latestPage: productsGetters.GET_LATEST_PAGE,
       }),
     },
 
     mounted () {
+      if (this.latestPage) {
+        this.page = this.latestPage
+        this.setLatestPage(0)
+      }
+
       this.fetchData({
         isMounted: true,
       }).then(() => {
@@ -188,6 +256,10 @@
     },
 
     methods: {
+      ...mapMutations({
+        setLatestPage: productsMutations.SET_LATEST_PAGE,
+        resetMessage: 'RESET_MESSAGE',
+      }),
       ...mapActions({
         setShowCreateProductModal: commonActions.SET_SHOW_CREATE_PRODUCT_MODAL,
       }),
@@ -209,14 +281,66 @@
           this.isMounted = false
         }
       },
+      fetchWithTimeout () {
+        if (filterDelayTimer) {
+          clearTimeout(filterDelayTimer)
+        }
+
+        this.isFetching = true
+        filterDelayTimer = setTimeout(() => {
+          return this.fetchData()
+        }, 1000)
+      },
+      soldPriceFormatter (product) {
+        const currency = product.currency
+        const coin = _.find(Coins, c => c.value === product.currency)
+        const amount = product.price
+        if (!amount || !coin || !currency) {
+          return ''
+        }
+        return splitZero(formatNumberAsText(convertUnitToReal(amount, coin.decimals))) + ' ' + currency.toUpperCase()
+      },
+      // selling status
       getSellingStatusAsText (status) {
         const _sellingStatus = _.find(SellingStatuses, s => s.value === status)
         return _sellingStatus ? _sellingStatus.text : ''
+      },
+      getSellingStatusAsColor (status) {
+        const sellingStatus = _.find(SellingStatuses, s => s.value === status)
+        return sellingStatus ? sellingStatus.textColor : 'text-muted'
+      },
+      canEditable (status) {
+        const sellingStatus = _.find(SellingStatuses, s => s.value === status)
+        return sellingStatus ? sellingStatus.canEditable : false
+      },
+      // gender
+      getGenderAsText (gender) {
+        const genderObject = _.find(Gender, g => g.value === gender)
+        return genderObject ? genderObject.text : ''
+      },
+      getGenderAsColor (gender) {
+        const genderObject = _.find(Gender, g => g.value === gender)
+        return genderObject ? genderObject.textColor : ''
+      },
+      // pagination
+      computedLimits () {
+        return _.map(LimitItems, item => {
+          return Object.assign({}, item, { text: item.text })
+        })
+      },
+      limitChange (_) {
+        this.page = 1
+        this.fetchWithTimeout()
+      },
+      getMaxPage () {
+        const maxPage = Math.ceil(this.totalProducts / this.limit)
+        return maxPage
       },
       seeProductDetail (productId) {
         if (!productId) {
           return
         }
+        this.setLatestPage(this.page)
         this.$router.push(`/products/${productId}`).catch(error => error ? console.error(error) : '')
       },
     },

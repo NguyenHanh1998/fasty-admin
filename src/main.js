@@ -40,6 +40,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import Web3Service from '@/services/web3-service'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import Paginate from 'vuejs-paginate'
 
 // check env before start app
 if (!process.env.VUE_APP_NETWORK) {
@@ -54,6 +55,8 @@ library.add(faSpinner, faUserCircle, faSignOutAlt, faSearch, faCalendarAlt, faRe
 library.add(faExclamationTriangle, faTimes, faEye, faEyeSlash, faBars, faSortUp, faSortDown)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('paginate', Paginate)
+
 Vue.config.productionTip = false
 
 Web3Service.init()

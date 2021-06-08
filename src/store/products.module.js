@@ -24,6 +24,9 @@ const getters = {
   [productsGetters.GET_SELECTED_PRODUCT] (state) {
     return state.selectedProduct
   },
+  [productsGetters.GET_LATEST_PAGE] (state) {
+    return state.currentPage
+  },
 }
 
 const actions = {
@@ -183,6 +186,9 @@ const mutations = {
   },
   [productsMutations.SET_SUCCESS] (state, { message, isServer }) {
     state.successMsg = isServer ? 's' + message : message
+  },
+  [productsMutations.SET_LATEST_PAGE] (state, page) {
+    state.currentPage = page
   },
 }
 export default {

@@ -1,6 +1,6 @@
 export const Gender = [
-  { text: 'Male', value: 1 },
-  { text: 'Female', value: 2 },
+  { text: 'Male', value: 1, textColor: 'text-male' },
+  { text: 'Female', value: 2, textColor: 'text-female' },
 ]
 
 export const Coins = [
@@ -69,3 +69,9 @@ export const Sort = {
     },
   },
 }
+
+export const LimitItems = [
+  { text: '10', value: 10 },
+  { text: '20', value: 20 },
+  { text: '50', value: 50 },
+]

@@ -23,6 +23,7 @@ export const productsMutations = {
   SET_ERROR: 'SET_TOKEN_ERROR',
   RESET_STATE: 'RESET_TOKEN_STATE',
   SET_SELECTED_PRODUCT: 'SET_SELECTED_PRODUCT',
+  SET_LATEST_PAGE: 'SET_LATEST_PAGE',
 }
 
 export const txsMutations = {

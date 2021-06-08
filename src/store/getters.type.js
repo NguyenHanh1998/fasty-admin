@@ -8,6 +8,7 @@ export const productsGetters = {
   GET_TOTAL_PRODUCTS: 'GET_TOTAL_PRODUCTS',
   GET_ALL_PRODUCTS: 'GET_ALL_PRODUCTS',
   GET_SELECTED_PRODUCT: 'GET_SELECTED_PRODUCT',
+  GET_LATEST_PAGE: 'GET_LATEST_PAGE',
 }
 
 export const txsGetters = {
