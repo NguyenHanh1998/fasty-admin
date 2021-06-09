@@ -173,7 +173,7 @@
                 </div>
               </div>
 
-              <div
+              <!-- <div
                 class="form-group mb-2"
               >
                 <label
@@ -191,9 +191,9 @@
                   auto
                   attach
                 />
-              </div>
+              </div> -->
 
-              <div class="form-group mb-2">
+              <!-- <div class="form-group mb-2">
                 <label
                   class="cards__label"
                   for="price"
@@ -219,7 +219,7 @@
                     placeholder="Offer Price"
                   >
                 </div>
-              </div>
+              </div> -->
 
               <div class="form-group form-submit cpm__button-group">
                 <button
@@ -273,8 +273,8 @@
           description: '',
           type: '',
           gender: '',
-          currency: '',
-          price: '',
+          currency: 'eth',
+          price: '0.0',
         },
         submitted: false,
         requesting: false,
@@ -333,8 +333,6 @@
       handleOnApply () {
         this.requesting = true
         this.product.image = this.fileName
-
-        console.log('////', this.product)
 
         this.createNewProduct(this.product)
           .then(_ => {

@@ -150,7 +150,9 @@ const Web3Service = {
   },
 
   isChrome () {
-    return !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)
+    return !!window.chrome
+    // &&
+    // (!!window.chrome.webstore || !!window.chrome.runtime)
   },
 }
 

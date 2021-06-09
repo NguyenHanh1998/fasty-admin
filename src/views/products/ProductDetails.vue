@@ -151,10 +151,14 @@
                       </div>
                     </div>
                   </div>
+                  <!-- <div class="product-detail__price-set__col-1-right">
+                    {{ paidCurrency.currency.toUpperCase() }} {{ getFinalPaidAmount() }}
+                  </div> -->
                 </div>
               </div>
             </v-col>
 
+            <!-- right content -->
             <v-col
               cols="12"
               lg="6"
@@ -162,6 +166,22 @@
               <div
                 class="product-detail__refer-currency form-group"
               >
+                <div
+                  v-if="!isOffSale() && !isCancelling()"
+                  class="form-group"
+                >
+                  <label
+                    class="cards__label"
+                    for="image"
+                  >
+                    Image
+                  </label>
+                  <img
+                    :src="VUE_APP_API_URL + image"
+                    :alt="image"
+                    class="product-detail__image"
+                  >
+                </div>
                 <label
                   class="cards__label"
                   for="refer-currency"
@@ -251,6 +271,7 @@
             <button
               type="button"
               class="ft__btn-submit ft__btn-small ml-1 mr-1"
+              :disabled="!isSellingChanged || actions.requesting"
               @click="apply"
             >
               <div
@@ -275,6 +296,8 @@
         </div>
       </template>
     </app-container>
+
+    <provider-not-available-modal v-if="showEthereumConnectionAlert.show" />
   </div>
 </template>
 
@@ -285,8 +308,8 @@
   import BigNumber from 'bignumber.js'
   import {
     splitZero,
-    // formatNumberAsText,
-    // convertUnitToReal,
+    formatNumberAsText,
+    convertUnitToReal,
     convertRealAmountToUnit,
     formatUuid,
     convertBytesToUint128Number,
@@ -318,6 +341,7 @@
 
     components: {
       AppContainer: () => import('@/views/dashboard/components/AppContainer'),
+      ProviderNotAvailableModal: () => import('@/views/modals/ProviderNotAvailableModal'),
     },
 
     data () {
@@ -327,6 +351,8 @@
         type: '',
         sellingStatus: '',
         description: '',
+        image: '',
+        VUE_APP_API_URL: process.env.VUE_APP_API_URL,
         actions: {
           submitted: false,
           requesting: false,
@@ -355,6 +381,7 @@
 
     computed: {
       ...mapState({
+        showEthereumConnectionAlert: (state) => state.common.ethererumConnectionAlert,
         successErg: (state) => state.products.successErg,
         errorMsg: (state) => state.products.errorMsg,
       }),
@@ -436,7 +463,8 @@
         const type = _.find(ProductTypes, p => p.value === this.selectedProduct.type)
         this.type = type.value
         this.description = this.selectedProduct.description
-        if (!this.selectedBundle) {
+        this.image = this.selectedProduct.image
+        if (!this.selectedProduct) {
           return
         }
         if (this.isOffSale()) {
@@ -447,6 +475,32 @@
             errorMessage: '',
             isChecked: true,
             isDefault: true,
+          }
+        } else {
+          // set prices
+          const coin = _.find(Coins, c => c.value === this.selectedProduct.currency)
+          const coinPrice = splitZero(
+            convertUnitToReal(this.selectedProduct.price, coin.decimals).toFixed(coin.decimals).toString(),
+          )
+
+          this.paidCurrency = {
+            currency: this.selectedProduct.currency,
+            value: coinPrice,
+            initialized: splitZero(
+              convertUnitToReal(this.selectedProduct.price, coin.decimals).toFixed(coin.decimals).toString(),
+            ),
+          }
+          // if (coinPrice.match(/\./)) {
+          //   coinPrice = coinPrice.replace(/\.?0+$/, '').toString()
+          // }
+          this.paidConverts[this.selectedProduct.currency] = {
+            id: `paid-currency-${this.selectedProduct.currency}-inp`,
+            value: coinPrice,
+            initialized: splitZero(
+              convertUnitToReal(this.selectedProduct.price, coin.decimals).toFixed(coin.decimals).toString(),
+            ),
+            errorMessage: '',
+            isChecked: true,
           }
         }
         this.initialSellingInfo = this.getSellingInfo()
@@ -586,6 +640,15 @@
           )
           isWeb3Error = false
 
+          const productInfo = {
+            name: this.selectedProduct.name,
+            description: this.description,
+            type: this.type,
+            gender: this.gender,
+            price: _.find(paymentMethods, payment => payment.isDefault).amount,
+            currency: _.find(paymentMethods, payment => payment.isDefault).currency,
+          }
+
           const apiParams = {
             orderId,
             exchangeAddress,
@@ -594,6 +657,7 @@
             amount: _.find(paymentMethods, payment => payment.isDefault).amount,
             currency: _.find(paymentMethods, payment => payment.isDefault).currency,
             paymentMethods,
+            product: productInfo,
           }
 
           // request to api service
@@ -657,6 +721,20 @@
         this.paidConverts[this.paidCurrency.currency].value = splitZero(
           this.getReferAmount(this.paidCurrency.currency, true).toFixed(defaultCoin.decimals).toString(),
         )
+      },
+      getFinalPaidAmount () {
+        let finalPaidAmount
+        if (new BigNumber(this.paidCurrency.initialized).gt(0)) {
+          finalPaidAmount = new BigNumber(this.paidCurrency.initialized)
+        } else if (!this.paidCurrency.value || this.paidCurrency.value.length === 0) {
+          finalPaidAmount = new BigNumber(0)
+        } else {
+          finalPaidAmount = new BigNumber(this.paidCurrency.value)
+        }
+        if (finalPaidAmount.gt(1)) {
+          return splitZero(formatNumberAsText(finalPaidAmount.decimalPlaces(2).toString()))
+        }
+        return splitZero(formatNumberAsText(finalPaidAmount.decimalPlaces(8).toString()))
       },
       getReferAmount (currency, ignore) {
         if (!currency || currency.length === 0 || !this.paidCurrency.value || this.paidCurrency.value.length === 0) {

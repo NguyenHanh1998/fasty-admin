@@ -120,7 +120,6 @@ const actions = {
       return new Promise((resolve, reject) => {
         ApiService.post('/admin/product', payload)
         .then(({ data }) => {
-          console.log('.......', data.data)
           context.commit(productsMutations.SET_SUCCESS, data)
           resolve(data.data)
         })
