@@ -23,13 +23,18 @@
                 </div>
                 <input
                   id="search-key"
+                  v-model.trim="search.key"
                   type="text"
                   name="search-key"
                   class="cards__input cards__pl-50"
                   placeholder="Search by product name"
+                  @keyup.enter="doSearch"
                 >
               </div>
-              <button class="ft__btn-submit ft__btn-small mr-1">
+              <button
+                class="ft__btn-submit ft__btn-small mr-1"
+                @click="doSearch"
+              >
                 Search
               </button>
 
@@ -57,7 +62,7 @@
                   Product Name
                 </th>
                 <th class="text-left">
-                  Slug
+                  Type
                 </th>
                 <th class="text-center">
                   Gender
@@ -97,7 +102,7 @@
                   {{ product.name }}
                 </td>
                 <td class="text-left">
-                  {{ product.slug }}
+                  {{ getTypeAsText(product.type) }}
                 </td>
                 <td
                   :class="getGenderAsColor(product.gender)"
@@ -199,6 +204,7 @@
     Gender,
     SellingStatuses,
     LimitItems,
+    ProductTypes,
   } from '../../constants'
 
   // let notifyTimeout
@@ -291,6 +297,10 @@
           return this.fetchData()
         }, 1000)
       },
+      doSearch (_) {
+        this.page = 1
+        this.fetchWithTimeout()
+      },
       soldPriceFormatter (product) {
         const currency = product.currency
         const coin = _.find(Coins, c => c.value === product.currency)
@@ -322,6 +332,10 @@
         const genderObject = _.find(Gender, g => g.value === gender)
         return genderObject ? genderObject.textColor : ''
       },
+      getTypeAsText (type) {
+        const productType = _.find(ProductTypes, t => t.value === type)
+        return productType ? productType.text : ''
+      },
       // pagination
       computedLimits () {
         return _.map(LimitItems, item => {
@@ -333,6 +347,7 @@
         this.fetchWithTimeout()
       },
       getMaxPage () {
+        console.log('....', this.totalProducts, this.limit)
         const maxPage = Math.ceil(this.totalProducts / this.limit)
         return maxPage
       },

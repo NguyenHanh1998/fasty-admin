@@ -30,8 +30,8 @@
           color="white"
           contain
         >
-          <v-img
-            src="https://demos.creative-tim.com/vuetify-material-dashboard/favicon.ico"
+          <img
+            src="/images/logo_small.png"
             max-height="30"
           />
         </v-list-item-avatar>
@@ -76,7 +76,7 @@
       <div />
     </v-list>
 
-    <template v-slot:append>
+    <!-- <template v-slot:append>
       <base-item
         :item="{
           title: $t('upgrade'),
@@ -84,7 +84,7 @@
           to: '/upgrade',
         }"
       />
-    </template>
+    </template> -->
   </v-navigation-drawer>
 </template>
 
@@ -112,13 +112,13 @@
           to: '/products',
         },
         {
-          icon: 'mdi-account',
+          icon: 'mdi-clipboard-outline',
           title: 'Transactions Management',
           to: '/transactions',
         },
         {
           title: 'Fee Setting',
-          icon: 'mdi-clipboard-outline',
+          icon: 'mdi-account',
           to: '/fees',
         },
       ],

@@ -5,15 +5,15 @@
         <div class="ft__auth-col ft__auth-col-1">
           <div class="ft__auth-col-1__logo-box">
             <img
-              src="images/icons/group-3.png"
-              alt="Genesis Kingdom"
+              src="images/cover.jpg"
+              alt="Fasty"
               class="ft__auth-col-1-background"
             >
-            <img
+            <!-- <img
               src="images/icons/logo.png"
               alt="Genesis Kingdom"
               class="ft__auth-logo"
-            >
+            > -->
           </div>
           <div class="ft__auth-col-1-text">
             Copy Right
@@ -26,8 +26,8 @@
               <div class="ft__auth-head-logo">
                 <img
                   class="ft__logo-small"
-                  src="images/icons/logo-small.png"
-                  alt="Genesis Kingdom"
+                  src="images/logo.png"
+                  alt="Fasty"
                 >
               </div>
               <div class="ft__auth-title">

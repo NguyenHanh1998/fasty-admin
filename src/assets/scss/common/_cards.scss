@@ -128,33 +128,33 @@
       padding: 3px 10px !important;
       background-color: #f4f4f4;
       &:focus {
-        border-color: #dba734 !important;
+        border-color: #4caf50 !important;
       }
     }
     .calender-div {
       .year-month-wrapper {
-        background-color: #dba734 !important;
+        background-color: #4caf50 !important;
         .month-setter {
           button.nav-l, button.nav-r {
-            background-color: #dba734 !important;
+            background-color: #4caf50 !important;
           }
         }
       }
       .headers {
         span.days {
-          color: #dba734 !important;
+          color: #4caf50 !important;
         }
       }
       .week {
         span.port {
           color: #333333 !important;
           &:hover {
-            color: #dba734 !important;
+            color: #4caf50 !important;
           }
         }
         span.activePort {
           color: #fff !important;
-          background-color: #dba734 !important;
+          background-color: #4caf50 !important;
           border-radius: 15px !important;
           &:hover {
             color: #fff !important;
@@ -163,7 +163,7 @@
       }
     }
     button.okButton {
-      color: #dba734 !important;
+      color: #4caf50 !important;
     }
   }
   &__pagination {
@@ -207,7 +207,7 @@
         }
         &__item--active.primary {
           color: #ffffff !important;
-          background-color: #dba734 !important;
+          background-color: #4caf50 !important;
         }
         i {
           font-style: normal;
@@ -326,7 +326,7 @@
       height: 180px;
     }
     &__title-head {
-      color: #faa23c;
+      color: #4caf50;
       font-size: 30px;
       font-weight: 500;
       margin-top: 20px;

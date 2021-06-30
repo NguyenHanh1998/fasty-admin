@@ -1,6 +1,6 @@
 <template>
   <app-container>
-    <template v-slot:coins-content>
+    <!-- <template v-slot:coins-content>
       <div>
         <v-row style="justify-content: center">
           <v-col
@@ -34,9 +34,43 @@
           </v-col>
         </v-row>
       </div>
-    </template>
+    </template> -->
 
     <template v-slot:content>
+      <div>
+        <v-row>
+          <v-col
+            v-for="(revenue, index) in computedRevenues()"
+            :key="'revenue__' + index"
+            cols="4"
+            class="pa-0"
+          >
+            <div
+              class="txs__coin-item"
+              :class="{
+                'txs__no-border': index === 2
+              }"
+            >
+              <div class="txs__coin-logo mr-3">
+                <img
+                  :src="revenue.icon"
+                  :alt="revenue.text"
+                  :class="'txs__img-' + revenue.value"
+                >
+              </div>
+              <div class="txs__coin-detail">
+                <div class="txs__coin-text-bold txs__coin-title">
+                  {{ revenue.text }} Revenue
+                </div>
+                <div class="txs__coin-balance-bold txs__coin-balance">
+                  {{ getTotalRevenueAsText(revenue) }}
+                </div>
+              </div>
+            </div>
+          </v-col>
+        </v-row>
+      </div>
+
       <div class="txs__coin-history__filter">
         <v-row>
           <v-col
@@ -93,12 +127,14 @@
             <div class="txs__coin-history__search-box txs__coin-history__search-right">
               <button
                 class="ft__btn-submit ft__btn-small mr-1"
+                @click="doSearch"
               >
                 Search
               </button>
 
               <button
                 class="ft__btn-submit ft__btn-small ft__btn-white"
+                @click="doReset"
               >
                 Reset
               </button>
@@ -106,17 +142,17 @@
           </v-col>
         </v-row>
 
-      <!-- <v-row v-if="submitted && validators.errorMessage">
-        <v-col
-          cols="12"
-          lg="12"
-          class="pt-0"
-        >
-          <small class="text-error">
-            {{ $t(validators.errorMessage) }}
-          </small>
-        </v-col>
-      </v-row> -->
+        <v-row v-if="submitted && validators.errorMessage">
+          <v-col
+            cols="12"
+            lg="12"
+            class="pt-0"
+          >
+            <small class="text-error">
+              {{ validators.errorMessage }}
+            </small>
+          </v-col>
+        </v-row>
       </div>
 
       <!-- history -->
@@ -294,7 +330,12 @@
         </v-row> -->
       </div>
 
-      <div class="py-3" />
+      <div v-if="isShowCurrentTx">
+        <transaction-detail-modal
+          v-model="isShowCurrentTx"
+          :order-id="selectedOrderId"
+        />
+      </div>
     </template>
   </app-container>
 </template>
@@ -310,12 +351,14 @@
   import { splitZero, formatNumberAsText, convertUnitToReal, formatLocalTimeInSeconds } from '@/utils/converter'
 
   let notifyTimeout
+  let filterDelayTimer
   export default {
     name: 'TransactionManagement',
 
     components: {
       datetime,
       AppContainer: () => import('@/views/dashboard/components/AppContainer'),
+      TransactionDetailModal: () => import('@/views/modals/TransactionDetailModal'),
     },
 
     data () {
@@ -337,6 +380,11 @@
           page: 1,
           limit: 10,
         },
+        submitted: false,
+        validators: {
+          errorMessage: '',
+        },
+        selectedOrderId: null,
         coins: Coins,
         Sort,
         formatNumberAsText,
@@ -357,6 +405,8 @@
     },
 
     mounted () {
+      this.binding()
+
       this.fetchRevenues()
         .then((_) => {
           return this.fetch({ isMounted: true })
@@ -382,6 +432,11 @@
             decimals: coin ? coin.decimals : 18,
           })
         })
+      },
+      binding () {
+        const nowDate = moment()
+        this.history.search.to = nowDate.format('DD/MM/YYYY')
+        this.history.search.from = nowDate.subtract(1, 'month').format('DD/MM/YYYY')
       },
       fetchRevenues () {
         return this.$store.dispatch(txsActions.GET_TOTAL_REVENUES)
@@ -415,6 +470,11 @@
             }
             this.handleErrorNotification()
           })
+        this.isFetching = false
+        this.submitted = false
+        if (!options.isMounted) {
+          this.isMounted = false
+        }
       },
       getRevenueAsText (revenue, currency) {
         if (!revenue || !currency) {
@@ -439,6 +499,38 @@
         }
         return formatLocalTimeInSeconds(Math.ceil(time / 1000), format)
       },
+      fetchWithTimeout () {
+        this.submitted = true
+        if (!this.requestInputsValidator()) {
+          return
+        }
+
+        this.isFetching = true
+        if (filterDelayTimer) {
+          clearTimeout(filterDelayTimer)
+        }
+        filterDelayTimer = setTimeout(() => {
+          return this.fetch()
+        }, 1000)
+      },
+      requestInputsValidator () {
+        let isValid = true
+        if (this.history.search.from && this.history.search.to) {
+          const startDate = moment(this.history.search.from, 'DD/MM/YYYY').startOf('day')
+          const endDate = moment(this.history.search.to, 'DD/MM/YYYY').endOf('day')
+          if (startDate.isSameOrAfter(endDate)) {
+            isValid = false
+            this.validators.errorMessage = 'The start date value must smaller than the end date value.'
+          } else {
+            this.validators.errorMessage = ''
+          }
+        }
+        return isValid
+      },
+      doSearch (_) {
+        this.history.page = 1
+        this.fetchWithTimeout()
+      },
       getTotalRevenueAsText (revenue) {
         return splitZero(formatNumberAsText(convertUnitToReal(revenue.amount, revenue.decimals), 8))
       },
@@ -448,6 +540,23 @@
           msg: ErrorHandler.getMessage(null, this.errorMsg),
         })
         this._resetForm()
+      },
+      seeTransactionDetail (id) {
+        this.selectedOrderId = id
+        this.isShowCurrentTx = true
+      },
+      doReset (_) {
+        this.history.page = 1
+        this.history.limit = 10
+        this.history.search.key = ''
+        this.binding()
+
+        // const elements = document.getElementsByClassName('datetime-picker-force-clear')
+        // for (let i = 0; i < elements.length; i++) {
+        //   const element = elements[i]
+        //   element.click()
+        // }
+        this.fetchWithTimeout()
       },
       _resetForm () {
         if (notifyTimeout) {

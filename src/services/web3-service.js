@@ -100,6 +100,10 @@ const Web3Service = {
     return new web3Instance.eth.Contract(contractAbi, contractAddress)
   },
 
+  getNetworkConfigs () {
+    return networkConfigs
+  },
+
  async getNetwork () {
     const web3 = this.getWeb3InstanceWithMetaMask()
     return web3.eth.net.getNetworkType()

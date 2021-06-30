@@ -145,7 +145,7 @@ const actions = {
 
 const mutations = {
   [productsMutations.SET_TOTAL_PRODUCTS] (state, meta) {
-    if (!meta || !meta.pagination || !meta.totalItems) {
+    if (!meta || !meta.pagination || !meta.pagination.totalItems) {
       return
     }
     state.totalProducts = meta.pagination.totalItems

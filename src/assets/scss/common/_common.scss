@@ -147,6 +147,13 @@
   }
 }
 
+.pagination {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+  border-radius: .25rem;
+}
+
 .tbl {
   &__empty-container {
     min-height: 500px;

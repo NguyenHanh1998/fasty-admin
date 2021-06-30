@@ -39,11 +39,11 @@
                   >
                   <input
                     id="txt-product-name"
-                    v-model.trim="product.productName"
+                    v-model.trim="product.name"
                     name="txt-product-name"
                     class="cards__input cpm__input"
                     :class="{
-                      'invalid': submitted && $v.product.productName.$error
+                      'invalid': submitted && $v.product.name.$error
                     }"
                     autocomplete="off"
                     type="text"
@@ -54,7 +54,7 @@
                   class="form-error mb-2"
                 >
                   <small
-                    v-if="submitted && !$v.product.productName.required"
+                    v-if="submitted && !$v.product.name.required"
                     class="text-error"
                   >Product name is required</small>
                 </div>
@@ -269,7 +269,7 @@
       return {
         // input
         product: {
-          productName: '',
+          name: '',
           description: '',
           type: '',
           gender: '',

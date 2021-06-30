@@ -47,7 +47,7 @@
         aria-expanded="false"
       >
         <img
-          src="/images/icons/logo.png"
+          src="/images/logo_small.png"
           alt="Genesis Kingdom"
           class="ft__appbar-logo ml-4 mr-5"
         >

@@ -61,11 +61,12 @@ const actions = {
     params.page = params.page || 1
     params.limit = params.limit || 10
 
+    console.log(':::::', params)
     if (JwtService.getToken()) {
       ApiService.setHeader()
 
       return new Promise((resolve, reject) => {
-        ApiService.get('/admin/transactions', {
+        ApiService.query('/admin/transactions', {
           params,
         })
           .then(({ data }) => {
@@ -137,6 +138,7 @@ const mutations = {
     state.totalTransactions = meta.pagination.totalItems || 0
   },
   [txsMutations.SET_TRANSACTIONS] (state, payload) {
+    console.log('====', payload)
     if (!payload || !payload.transactions || !payload.page || !payload.limit) {
       return
     }

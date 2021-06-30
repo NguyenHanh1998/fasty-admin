@@ -5,7 +5,7 @@
     justify-content: flex-start;
     align-items: center;
     padding: 23px 60px;
-    background-color: #9c282b;
+    background-color: #ffffff;
     border-right: 1px solid rgba(255, 255, 255, .2);
     @media screen and (max-width: 991px) {
       padding-left: 23px;
@@ -19,7 +19,7 @@
     width: 35px !important;
   }
   &__coin-text-bold {
-    font-size: 12px;
+    font-size: 20px;
     font-weight: 500;
   }
   &__coin-balance-bold {
@@ -27,10 +27,10 @@
     font-weight: 700;
   }
   &__coin-title {
-    color: white;
+    color: #4caf50;
   }
   &__coin-balance {
-    color: white;
+    color: #000000;
   }
   &__coin-history {
     &__header {
@@ -129,7 +129,7 @@
     justify-content: center;
   }
   &__container {
-    min-width: 820px;
+    min-width: 850px;
     padding: 0px 45px;
 
     &__header {
@@ -156,7 +156,7 @@
     width: 117px;
   }
   &__header-name {
-    color: #9c282b;
+    color: #4caf50;
     font-size: 40px;
     font-weight: 600;
     text-align: left;
@@ -192,11 +192,15 @@
     margin-bottom: 5px;
   }
   &__box-title a {
-    color: #dba734 !important;
+    color: #4caf50 !important;
     font-weight: 400;
   }
   &__box-info {
     color: #666666;
+  }
+  &__box-product-image {
+    width: 120px;
+    height: 100px;
   }
   &__address {
     margin-top: 18px;
